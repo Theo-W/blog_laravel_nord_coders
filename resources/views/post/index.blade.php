@@ -41,8 +41,8 @@
                                     </p>
                                 </div>
                                 <div class="flex items-center justify-between mt-4">
-                                    <a href="#" class="text-blue-500 hover:underline">
-                                        Read more
+                                    <a href="{{ route('posts.show', $post) }}" class="text-blue-500 hover:underline">
+                                        Voir plus
                                     </a>
                                     <div><a href="#" class="flex items-center"><img
                                                 src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=731&amp;q=80"

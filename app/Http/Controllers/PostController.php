@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 
 class PostController extends Controller
 {
@@ -14,7 +17,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('category', 'user')->get();
+        $posts = Post::with('category', 'user')->latest()->get();
+
         return view('post.index', compact('posts'));
     }
 
@@ -25,7 +29,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+
+        return view('post.create', compact('categories'));
     }
 
     /**
@@ -34,9 +40,17 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        //
+        $imageName = $request->image->store('posts');
+
+        Post::create([
+            'name' => $request->get('name'),
+            'content' => $request->get('content'),
+            'image' => $imageName
+        ]);
+
+        return  redirect()->route('dashboard')->with('success' , 'Votre poste à bien été crée');
     }
 
     /**
@@ -47,7 +61,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('post.show', compact('post'));
     }
 
     /**
