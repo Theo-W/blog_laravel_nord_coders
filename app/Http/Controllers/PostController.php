@@ -72,7 +72,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $categories = Category::all();
+       return view('post.edit', compact('post', 'categories'));
     }
 
     /**
@@ -82,9 +83,24 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(StorePostRequest $request, Post $post)
     {
-        //
+        $arrayUpdate = [
+            'name' => $request->get('name'),
+            'content' => $request->get('content')
+        ];
+
+        if ($request->image != null) {
+            $imageName = $request->image->store('posts');
+
+            $arrayUpdate = array_merge($arrayUpdate, [
+                'image' => $imageName
+            ]);
+        }
+
+        $post->update($arrayUpdate);
+
+        return  redirect()->route('dashboard')->with('success' , 'Votre poste à bien été modifier');
     }
 
     /**
@@ -95,6 +111,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return  redirect()->route('dashboard')->with('success' , 'Votre poste à bien été supprimer');
     }
 }
